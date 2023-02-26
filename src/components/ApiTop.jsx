@@ -1,49 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 const ApiTop = () => {
 
-  const newsApi = `https://hacker-news.firebaseio.com/v0/newstories.json`;
+  const topURL = "https://hacker-news.firebaseio.com/v0/newstories.json";
+  const itemURL = "https://hacker-news.firebaseio.com/v0/item/";//${a[0]}.json?print=pretty
 
 
+  const itemFetch = async (array) => {
+    // 配列をそのままfetch
+    const res = await fetch(array);
+    const data = await res.json();
+    console.log(data);
+  };
+  // 配列を展開してfetch　
+  //   const res = await array.map(e => {
+  //     return fetch({e});
+  //   })
+  //   console.log(res);
+  // };
 
-  const [news,setNews] = useState([]);
+  const fetchData = async (url) => {
+    const res = await fetch(url);
+    const data = await res.json();
+    const topArray = await data.slice(0,20);
+    const topData = await topArray.map(v => {
+     return `${itemURL}${v}.json?print=pretty`
+    });
+    await itemFetch(topData);
+  };
 
-  useEffect(() => {
-    fetch(newsApi)
-    .then(res => {
-      return res.json();
-    })
-    .then(data => {
-      setNews(data)
-    })
-  },[]);
-
-
-  const a = news.map( value => {
-    return `https://hacker-news.firebaseio.com/v0/item/${value}.json`
-  });
-  const k = a.slice(0,20)
-
-
-
-
-  const [api, setApi] = useState([]);
-
-  useEffect(()=> {
-    k.map(data => {
-    fetch(data)
-    .then(res=> {
-      return res.json();
-    })
-    .then(data2 => {
-    //  console.log(data2);
-     setApi(data2);
-    })
-  });
-  },[news]);
-
-  console.log(api);
-
+  fetchData(topURL);
 
 
   return (
