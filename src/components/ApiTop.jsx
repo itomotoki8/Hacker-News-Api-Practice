@@ -12,6 +12,7 @@ const ApiTop = () => {
     const data = await res.json();
     console.log(data);
   };
+  
   // 配列を展開してfetch　
   //   const res = await array.map(e => {
   //     return fetch({e});
